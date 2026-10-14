@@ -43,7 +43,7 @@ export function App() {
             title={b.link === "connected" ? "Connected" : "Connect"}
           >
             <span className={`led ${led}`} aria-hidden="true" />
-            {b.link === "connected" ? (b.blender?.demo ? "Demo" : "Linked") : b.link === "connecting" ? "…" : "Connect"}
+            {b.link === "connected" ? (b.blender?.demo ? "Demo" : "Connected") : b.link === "connecting" ? "…" : "Connect"}
           </button>
           <button
             className="pill"

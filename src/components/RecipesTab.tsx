@@ -276,7 +276,7 @@ function Session({
             )}
             <div className="row" style={{ marginTop: 1 }}>
               <button className="pill pill--fixed pill--on" onClick={next}>
-                {near ? "Got it →" : "Next →"}
+                Next →
               </button>
               <button className="pill pill--fixed" onClick={() => commit(null)}>
                 Skip
@@ -290,7 +290,6 @@ function Session({
                 className={`pill pill--fixed${auto ? " pill--on" : ""}`}
                 onClick={() => setAuto(!auto)}
                 aria-pressed={auto}
-                title="Move on by itself once the target has settled"
               >
                 {auto ? "Auto ✓" : "Auto"}
               </button>

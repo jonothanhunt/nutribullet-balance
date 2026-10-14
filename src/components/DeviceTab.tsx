@@ -63,7 +63,7 @@ export function DeviceTab({ b }: { b: Balance }) {
       </section>
 
       <div className="section-head">
-        <span className="label">Traffic</span>
+        <span className="label">Log</span>
         <button className="label label--soft" onClick={b.clearLog}>
           Clear
         </button>
@@ -119,7 +119,7 @@ export function DeviceTab({ b }: { b: Balance }) {
 
       {chars && (
         <section className="block block--flame stack">
-          <Spec label="Raw write">Experimental</Spec>
+          <span className="label">Raw write</span>
           <select className="field" value={target} onChange={(e) => setTarget(e.target.value)}>
             <option value="">Characteristic</option>
             {chars.map((c) => (
