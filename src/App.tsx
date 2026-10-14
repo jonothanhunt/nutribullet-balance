@@ -68,10 +68,6 @@ export function App() {
         {tab === "blend" && <BlendTab b={b} unit={unit} setUnit={setUnit} />}
         {tab === "recipes" && <RecipesTab b={b} unit={unit} onBlend={() => setTab("blend")} />}
         {tab === "device" && <DeviceTab b={b} />}
-        <p className="foot">
-          Unofficial controller for the NutriBullet Balance · by{" "}
-          <a href="https://jonothan.dev">Jonothan Hunt</a>
-        </p>
       </main>
 
       <nav className="tabs" aria-label="Sections">

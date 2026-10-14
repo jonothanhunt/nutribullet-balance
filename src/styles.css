@@ -667,7 +667,8 @@ main.shell {
   flex-direction: column;
   gap: 10px;
   text-align: left;
-  min-height: 150px;
+  justify-content: space-between;
+  min-height: 120px;
 }
 
 .prog__name {
@@ -675,13 +676,6 @@ main.shell {
   justify-content: space-between;
   align-items: flex-start;
   gap: 8px;
-}
-
-.prog__blurb {
-  font-family: var(--body);
-  font-size: 0.9375rem;
-  line-height: 1.25;
-  flex: 1;
 }
 
 .prog--on {
@@ -853,13 +847,6 @@ input[type="range"]::-moz-range-thumb {
   gap: 6px 14px;
   text-align: left;
   width: 100%;
-}
-
-.recipe__blurb {
-  grid-column: 1 / -1;
-  font-family: var(--body);
-  font-size: 0.9375rem;
-  line-height: 1.25;
 }
 
 .recipe__bar {

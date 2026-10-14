@@ -3,7 +3,7 @@ import { DemoBlender, bluetoothAvailable } from "../ble/device";
 import { MAX_STEPS, MIN_SPEED, MAX_SPEED, programSeconds, speedPct, type Step } from "../ble/protocol";
 import { PROGRAMS } from "../data/programs";
 import type { Balance } from "../lib/useBalance";
-import { Meter, Sheet, Spec, Timeline, fmtSeconds, fmtWeight, type Unit } from "./ui";
+import { Sheet, Spec, Timeline, fmtSeconds, fmtWeight, type Unit } from "./ui";
 
 export function useNow(active: boolean, ms = 100) {
   const [now, setNow] = useState(Date.now());
@@ -25,7 +25,6 @@ export function BlendTab({ b, unit, setUnit }: { b: Balance; unit: Unit; setUnit
 
       <div className="section-head">
         <span className="label">Program</span>
-        <span className="label label--soft">Sent when you pick it</span>
       </div>
       <div className="grid grid--3">
         {PROGRAMS.map((p) => (
@@ -39,7 +38,6 @@ export function BlendTab({ b, unit, setUnit }: { b: Balance; unit: Unit; setUnit
               <h3>{p.name}</h3>
               <span className="check">✓</span>
             </div>
-            <p className="prog__blurb">{p.blurb}</p>
             <Timeline steps={p.steps} />
             <Spec label="Time">{fmtSeconds(programSeconds(p.steps))}</Spec>
           </button>
@@ -56,7 +54,6 @@ export function BlendTab({ b, unit, setUnit }: { b: Balance; unit: Unit; setUnit
             <h3>Custom</h3>
             <span className="check">✓</span>
           </div>
-          <p className="prog__blurb">Your own steps. Tap to edit.</p>
           <Timeline steps={b.custom} />
           <Spec label="Time">{fmtSeconds(programSeconds(b.custom))}</Spec>
         </button>
@@ -134,7 +131,7 @@ function ScaleBlock({
       {b.tared && (
         <div style={{ marginTop: 10 }}>
           <button className="label label--soft" onClick={b.clearTare}>
-            Tared · tap to clear
+            Clear tare
           </button>
         </div>
       )}
@@ -153,14 +150,9 @@ function StatusBlock({ b }: { b: Balance }) {
   if (b.link !== "connected") {
     return (
       <section className="block block--ink status">
-        <span className="label">Blender</span>
-        <h2>{b.link === "lost" ? "Lost the base" : b.link === "connecting" ? "Connecting…" : "Not connected"}</h2>
-        <p className="body" style={{ marginBottom: 16, opacity: 0.8 }}>
-          {bluetoothAvailable()
-            ? "Plug the base in, then connect. It shows up as “NutriBullet Balance” or “UBN…”."
-            : "This browser can't do Bluetooth. Use Chrome or Edge on Android, Mac or Windows — or Bluefy on iPhone. The demo works anywhere."}
-        </p>
-        <div className="row">
+        <h2 style={{ marginTop: 0 }}>{b.link === "lost" ? "Disconnected" : b.link === "connecting" ? "Connecting…" : "Not connected"}</h2>
+        {!bluetoothAvailable() && <p className="label" style={{ marginBottom: 12 }}>No Bluetooth in this browser</p>}
+        <div className="row" style={{ marginTop: 16 }}>
           <button
             className="pill"
             style={{ background: "var(--sun)", color: "var(--ink-fixed)", boxShadow: "none" }}
@@ -170,7 +162,7 @@ function StatusBlock({ b }: { b: Balance }) {
             {b.link === "lost" ? "Reconnect" : "Connect"}
           </button>
           <button className="pill" style={{ boxShadow: "inset 0 0 0 1px rgb(var(--paper-rgb) / 0.4)" }} onClick={b.startDemo}>
-            Try the demo
+            Demo
           </button>
         </div>
         {b.error && (
@@ -192,9 +184,6 @@ function StatusBlock({ b }: { b: Balance }) {
           {fmtSeconds(Math.ceil(left))}
         </div>
         <Timeline steps={b.runSteps} progress={Math.min(1, elapsed / b.runSeconds)} big />
-        <p className="body" style={{ marginTop: 14 }}>
-          Twist the cup off to stop.
-        </p>
         {demo && <DemoControls demo={demo} cupLabel="Twist off (demo)" />}
       </section>
     );
@@ -203,9 +192,7 @@ function StatusBlock({ b }: { b: Balance }) {
   if (b.cup === "done") {
     return (
       <section className="block block--leaf status">
-        <Spec label="Blender">Finished</Spec>
-        <h2>Done. Twist off and pour.</h2>
-        <Meter value={1} />
+        <h2 style={{ marginTop: 0 }}>Done</h2>
         {demo && <DemoControls demo={demo} cupLabel="Twist off (demo)" />}
       </section>
     );
@@ -214,11 +201,7 @@ function StatusBlock({ b }: { b: Balance }) {
   return (
     <section className="block block--sun status marks">
       <Spec label="Ready">{selected} · {fmtSeconds(programSeconds(b.steps))}</Spec>
-      <h2>Lock the cup to blend</h2>
-      <p className="body">
-        The program is loaded. Press the cup down and twist to lock it in — the Balance starts by itself
-        and stops when the program ends or you twist it off.
-      </p>
+      <h2 style={{ marginBottom: 0 }}>Lock cup to start</h2>
       {demo && <DemoControls demo={demo} cupLabel="Lock cup (demo)" />}
     </section>
   );
@@ -261,7 +244,7 @@ function CalibrateSheet({ b, onClose }: { b: Balance; onClose: () => void }) {
     // A real load cell moves by many counts per gram. A tiny delta means
     // nothing was put on, or it was put on before zeroing.
     if (Math.abs(perGram) < 0.5) {
-      setErr("The reading barely moved. Is the weight on the base?");
+      setErr("No change detected");
       return;
     }
     b.setCalibration({ zero, perGram });
@@ -271,10 +254,6 @@ function CalibrateSheet({ b, onClose }: { b: Balance; onClose: () => void }) {
   return (
     <Sheet title="Calibrate" onClose={onClose}>
       <div className="stack">
-        <p className="body">
-          The base reports raw load-cell counts, not grams. Two readings turn one into the other, and the app
-          remembers them.
-        </p>
         <Spec label="Live">{b.raw != null ? Math.round(b.raw) : "—"}</Spec>
         {b.blender instanceof DemoBlender && (
           <div className="row">
@@ -286,21 +265,16 @@ function CalibrateSheet({ b, onClose }: { b: Balance; onClose: () => void }) {
 
         {stage === "zero" && (
           <>
-            <h3>1 · Clear the base</h3>
-            <p className="body">Take everything off, including the cup. Wait a second, then:</p>
+            <h3>1 · Empty base</h3>
             <button className="pill pill--ink pill--block" onClick={captureZero} disabled={b.raw == null}>
-              Base is empty
+              Set zero
             </button>
           </>
         )}
 
         {stage === "known" && (
           <>
-            <h3>2 · Add a known weight</h3>
-            <p className="body">
-              Anything whose weight you trust: a sealed 500 g pack of pasta, a 1 kg bag of sugar, the cup filled
-              with 500 g of water weighed on another scale.
-            </p>
+            <h3>2 · Known weight</h3>
             <div className="row" style={{ alignItems: "center", gap: 10 }}>
               <input
                 className="field field--num"
@@ -312,7 +286,7 @@ function CalibrateSheet({ b, onClose }: { b: Balance; onClose: () => void }) {
               <span className="label">grams</span>
             </div>
             <button className="pill pill--ink pill--block" onClick={captureKnown}>
-              It's on the base
+              Set
             </button>
             {err && <p className="label" style={{ color: "var(--flame)" }}>{err}</p>}
           </>
@@ -321,10 +295,6 @@ function CalibrateSheet({ b, onClose }: { b: Balance; onClose: () => void }) {
         {stage === "done" && (
           <>
             <h3>Calibrated</h3>
-            <p className="body">
-              {b.grams != null ? `Reading ${b.grams.toFixed(0)} g now. ` : ""}Take it off and the scale should
-              return to zero.
-            </p>
             <button className="pill pill--ink pill--block" onClick={onClose}>
               Done
             </button>
@@ -410,10 +380,6 @@ function CustomSheet({ b, onClose }: { b: Balance; onClose: () => void }) {
           + Blend
         </button>
       </div>
-      <p className="label label--soft" style={{ marginTop: 14, lineHeight: 1.6 }}>
-        Up to {MAX_STEPS} steps · speed tops out at the fastest factory setting · changes are sent to the base as
-        you make them
-      </p>
     </Sheet>
   );
 }

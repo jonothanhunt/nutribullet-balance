@@ -76,7 +76,6 @@ export interface Item {
 export interface Recipe {
   id: string;
   name: string;
-  blurb: string;
   ink: Ink;
   program: string;
   items: Item[];
@@ -89,7 +88,6 @@ export const RECIPES: Recipe[] = [
   {
     id: "green-machine",
     name: "Green machine",
-    blurb: "Spinach you won't taste, pineapple you will.",
     ink: "leaf",
     program: "super",
     items: [
@@ -103,7 +101,6 @@ export const RECIPES: Recipe[] = [
   {
     id: "berry-oat",
     name: "Berry oat breakfast",
-    blurb: "A bowl of porridge you drink on the bus.",
     ink: "grape",
     program: "standard",
     items: [
@@ -117,7 +114,6 @@ export const RECIPES: Recipe[] = [
   {
     id: "pb-banana",
     name: "PB & banana",
-    blurb: "Post-gym. Tastes like a milkshake, isn't one.",
     ink: "sun",
     program: "standard",
     items: [
@@ -131,7 +127,6 @@ export const RECIPES: Recipe[] = [
   {
     id: "tropical",
     name: "Tropical",
-    blurb: "Mango, pineapple, lime. Holiday in a cup.",
     ink: "flame",
     program: "crush",
     items: [
@@ -145,7 +140,6 @@ export const RECIPES: Recipe[] = [
   {
     id: "choc-cherry",
     name: "Chocolate cherry",
-    blurb: "Black forest gâteau, minus the gâteau.",
     ink: "rose",
     program: "super",
     items: [
@@ -159,7 +153,6 @@ export const RECIPES: Recipe[] = [
   {
     id: "cucumber-mint",
     name: "Cucumber cooler",
-    blurb: "Barely sweet, very cold, very green.",
     ink: "sea",
     program: "crush",
     items: [
@@ -174,7 +167,6 @@ export const RECIPES: Recipe[] = [
   {
     id: "blue-protein",
     name: "Blueberry protein",
-    blurb: "Thick, purple, 35g protein.",
     ink: "sky",
     program: "standard",
     items: [
@@ -188,7 +180,6 @@ export const RECIPES: Recipe[] = [
   {
     id: "avo-kale",
     name: "Avocado & kale",
-    blurb: "Silky. Keeps you full till lunch.",
     ink: "leaf",
     program: "super",
     items: [

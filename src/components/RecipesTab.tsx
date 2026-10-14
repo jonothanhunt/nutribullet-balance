@@ -48,7 +48,6 @@ export function RecipesTab({
   const blank: Recipe = {
     id: `mine-${Date.now()}`,
     name: "Freestyle",
-    blurb: "",
     ink: "sun",
     program: "standard",
     items: [],
@@ -57,20 +56,8 @@ export function RecipesTab({
 
   return (
     <div className="stack">
-      <header>
-        <span className="label label--soft">Weigh as you go</span>
-        <h2 style={{ marginTop: 8 }}>Smoothies</h2>
-        <p className="body" style={{ marginTop: 8 }}>
-          Pick one and drop each ingredient into the cup on the base. The scale tares between items, so every
-          number is just the thing you added.
-        </p>
-      </header>
-
-      <button className="block block--ink" style={{ width: "100%", textAlign: "left" }} onClick={() => setOpen(blank)}>
-        <Spec label="Freestyle">+ Start empty</Spec>
-        <p className="body" style={{ marginTop: 8, opacity: 0.8 }}>
-          Add whatever you've got and the app does the maths.
-        </p>
+      <button className="pill pill--ink pill--block" onClick={() => setOpen(blank)}>
+        + Freestyle
       </button>
 
       {mine.length > 0 && (
@@ -87,8 +74,7 @@ export function RecipesTab({
       )}
 
       <div className="section-head">
-        <span className="label">Ideas</span>
-        <span className="label label--soft">{RECIPES.length} recipes</span>
+        <span className="label">Recipes</span>
       </div>
       <div className="stack" style={{ marginTop: 12 }}>
         {RECIPES.map((r) => (
@@ -107,7 +93,6 @@ function RecipeCard({ r, onOpen }: { r: Recipe; onOpen: () => void }) {
       <span className="label" style={{ alignSelf: "center" }}>
         {Math.round(t.kcal)} kcal
       </span>
-      {r.blurb && <p className="recipe__blurb">{r.blurb}</p>}
       <span className="label label--soft" style={{ gridColumn: "1 / -1" }}>
         {r.items.map((i) => name(i.food)).join(" · ")}
       </span>
@@ -241,20 +226,14 @@ function Session({
       </div>
 
       <section className={`block block--${recipe.ink} marks`}>
-        <Spec label={recipe.mine ? "Yours" : "Recipe"}>
-          {Math.round(planned.kcal)} kcal planned
-        </Spec>
-        <h2 style={{ margin: "10px 0 6px" }}>{recipe.name}</h2>
-        {recipe.blurb && <p className="body">{recipe.blurb}</p>}
+        <Spec label={recipe.name}>{Math.round(planned.kcal)} kcal</Spec>
 
         {live && !started && !finished && (
           <div style={{ marginTop: 18 }}>
-            <span className="label">First</span>
-            <h3 style={{ margin: "6px 0 8px", fontSize: "1.375rem" }}>Empty cup on the base</h3>
-            <p className="body">Everything after this is weighed on top of it.</p>
-            <div className="row" style={{ marginTop: 14 }}>
+            <h3 style={{ marginBottom: 14, fontSize: "1.375rem" }}>Empty cup on base</h3>
+            <div className="row">
               <button className="pill pill--fixed pill--on" onClick={() => setStarted(true)}>
-                Cup's on · start →
+                Start →
               </button>
             </div>
           </div>
@@ -263,13 +242,13 @@ function Session({
         {(!live || started) && !finished && cur && (
           <div style={{ marginTop: 18 }}>
             <span className="label">
-              Now · {at + 1} of {lines.length}
+              {at + 1}/{lines.length}
             </span>
             <div className="weigh__now">
               <h3 style={{ fontSize: "1.375rem" }}>{name(cur.food)}</h3>
               {target != null && (
                 <span className="label weigh__target">
-                  {over ? <span className="weigh__over">Over</span> : `Target ${target} g`}
+                  {over ? <span className="weigh__over">Over</span> : `${target} g`}
                 </span>
               )}
             </div>
@@ -279,10 +258,7 @@ function Session({
                 <span style={{ fontSize: "0.4em", marginLeft: 6 }}>{w.u}</span>
               </div>
             ) : (
-              <p className="body">
-                {target != null ? `Add ${target} g.` : "Add as much as you like."} Connect the base to weigh it —
-                without it, Next just counts the target.
-              </p>
+              null
             )}
             {target != null && (
               <div style={{ marginTop: 12 }}>
@@ -324,9 +300,8 @@ function Session({
 
         {finished && (
           <div style={{ marginTop: 18 }}>
-            <span className="label">{lines.length ? "All in" : "Empty cup"}</span>
-            <h3 style={{ margin: "6px 0 12px", fontSize: "1.375rem" }}>
-              {lines.length ? `${Math.round(t.grams)} g in the cup` : "Add your first ingredient"}
+            <h3 style={{ marginBottom: 12, fontSize: "1.375rem" }}>
+              {lines.length ? `${Math.round(t.grams)} g` : "Empty"}
             </h3>
             {lines.length > 0 && (
               <div className="row">
@@ -359,12 +334,11 @@ function Session({
       </ul>
 
       <button className="pill pill--block" onClick={() => setAdding(true)}>
-        + Add an ingredient
+        + Add ingredient
       </button>
 
       <div className="section-head">
-        <span className="label">In the cup so far</span>
-        <span className="label label--soft">Estimates · per USDA</span>
+        <span className="label">Nutrition</span>
       </div>
       <div className="nutri">
         <div>
@@ -401,10 +375,9 @@ function Session({
 
       {finished && done.length > 0 && (
         <section className="block block--paper framed stack">
-          <span className="label">{recipe.mine ? "Update your recipe" : "Keep this one"}</span>
           <input
             className="field"
-            placeholder="Name it"
+            placeholder="Name"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -418,14 +391,13 @@ function Session({
                   ...recipe,
                   id: recipe.mine ? recipe.id : `mine-${Date.now()}`,
                   name: title.trim(),
-                  blurb: recipe.mine ? recipe.blurb : `Your take on ${recipe.name}.`,
                   items,
                   mine: true,
                 });
                 setSaved(true);
               }}
             >
-              {saved ? "Saved ✓" : "Save as recipe"}
+              {saved ? "Saved ✓" : "Save"}
             </button>
             {onDelete && (
               <button className="pill" onClick={onDelete}>
@@ -437,8 +409,7 @@ function Session({
       )}
 
       {adding && (
-        <Sheet title="Add an ingredient" onClose={() => setAdding(false)}>
-          <p className="body">It goes in next, weighed free — no target.</p>
+        <Sheet title="Add" onClose={() => setAdding(false)}>
           <div className="picker">
             {FOODS.map((x) => (
               <button
