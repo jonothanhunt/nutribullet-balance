@@ -1,0 +1,10 @@
+{
+  "name": "Balance",
+  "short_name": "Balance",
+  "description": "Unofficial controller for the NutriBullet Balance",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#16161a",
+  "theme_color": "#16161a",
+  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

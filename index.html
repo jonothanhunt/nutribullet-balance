@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en-GB" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Balance</title>
+    <meta name="description" content="An unofficial Web Bluetooth controller for the NutriBullet Balance: live scale, blend programs and weigh-as-you-go smoothies." />
+    <meta name="theme-color" content="#16161a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="preload" href="./fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./fonts/geist-pixel-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script>
+      try {
+        if (JSON.parse(localStorage.getItem("theme")) === "light") document.documentElement.dataset.theme = "light";
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
